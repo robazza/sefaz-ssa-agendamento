@@ -278,6 +278,11 @@ html, body {
 .agend-td-acts { text-align: right; white-space: nowrap; padding: 12px 16px 12px 14px; }
 .agend-td-acts .btn-sm-s  { margin-left: 5px; }
 .agend-td-acts .btn-danger{ margin-left: 5px; }
+.agend-tr-clickable       { cursor: pointer; }
+.agend-tr-clickable:hover { background: var(--brand-light) !important; }
+.agend-receipt-hint       { font-size: 12px; color: var(--brand-text); font-weight: 500;
+                             opacity: .8; margin-right: 8px; vertical-align: middle;
+                             text-decoration: underline; text-underline-offset: 2px; }
 
 /* ── EMPTY STATE ── */
 .empty-state     { text-align: center; padding: 48px 20px; color: var(--text-tertiary); }
@@ -1027,7 +1032,7 @@ let agendamentos = [
 let novoStep = 1, selSvc = null, selCat = '';
 let cSelDate = null, cSelSlot = null;
 let selDate = null, selSlot = null;
-let filteredStatus = '', filteredQ = '', cancelTarget = null;
+let filteredStatus = '', filteredQ = '', cancelTarget = null, viewingAgend = null;
 
 /* ════════════════════
    NAVEGAÇÃO
@@ -1057,7 +1062,7 @@ function switchTab(t) {
   document.getElementById('tab-consulta').className = 'nav-tab' + (t === 'consulta' ? ' active' : '');
   document.getElementById('tab-novo').className     = 'nav-tab' + (t === 'novo'     ? ' active' : '');
   if (t === 'consulta') { showScreen('consulta'); renderAgendList(); }
-  else { showScreen('novo'); novoStep = 1; selSvc = null; cSelDate = null; cSelSlot = null; selCat = ''; renderNovoStep(); }
+  else { showScreen('novo'); novoStep = 1; selSvc = null; cSelDate = null; cSelSlot = null; selCat = ''; viewingAgend = null; renderNovoStep(); }
 }
 
 /* ════════════════════
@@ -1086,10 +1091,13 @@ function renderAgendList() {
   const rows = list.map(a => {
     const ativo = a.status === 'agendado';
     const acts  = ativo
-      ? `<button class="btn-sm-s" onclick="iniciarReagendamento(${a.id})">Reagendar</button>` +
-        `<button class="btn-danger" onclick="openCancel(${a.id})">Cancelar</button>`
+      ? `<button class="btn-sm-s" onclick="event.stopPropagation();iniciarReagendamento(${a.id})">Reagendar</button>` +
+        `<button class="btn-danger"  onclick="event.stopPropagation();openCancel(${a.id})">Cancelar</button>`
       : '';
-    return `<tr>
+    const trAttrs = ativo
+      ? `class="agend-tr-clickable" onclick="verComprovante(${a.id})" title="Ver comprovante"`
+      : '';
+    return `<tr ${trAttrs}>
       <td class="agend-td-name" title="${a.svc}">${a.svc}</td>
       <td class="agend-td-meta">${a.date}</td>
       <td class="agend-td-meta">${a.time}</td>
@@ -1155,6 +1163,21 @@ function iniciarReagendamento(id) {
   document.getElementById('tab-novo').className     = 'nav-tab active';
   showScreen('novo');
   novoStep = 2;
+  renderNovoStep();
+}
+
+/* ════════════════════
+   VER COMPROVANTE → passo 4
+════════════════════ */
+function verComprovante(id) {
+  const a = agendamentos.find(x => x.id === id);
+  if (!a) return;
+  viewingAgend = a;
+  selSvc = SERVICES.find(s => s.code === a.code) || null;
+  document.getElementById('tab-consulta').className = 'nav-tab';
+  document.getElementById('tab-novo').className     = 'nav-tab active';
+  showScreen('novo');
+  novoStep = 4;
   renderNovoStep();
 }
 
@@ -1366,22 +1389,26 @@ function finalizarAgend() {
 }
 
 function renderStepDone() {
-  const proto = agendamentos[0] ? agendamentos[0].proto : 'AGD-2026-00000';
+  const viewing = !!viewingAgend;
+  const proto   = viewing ? viewingAgend.proto : (agendamentos[0] ? agendamentos[0].proto : 'AGD-2026-00000');
+  const dateStr = viewing ? viewingAgend.date  : (selDate ? String(selDate).padStart(2,'0') + '/05/2026' : '—');
+  const timeStr = viewing ? viewingAgend.time  : (selSlot || '—');
+  const heading = viewing ? 'Comprovante de agendamento' : 'Agendamento confirmado!';
   return `
   <div class="success-wrap">
     <div class="success-ico no-print">
       <svg viewBox="0 0 24 24" fill="none" stroke="#27500a" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
     </div>
-    <h2>Agendamento confirmado!</h2>
-    <p class="no-print">Você receberá um e-mail de confirmação com todos os detalhes.</p>
+    <h2>${heading}</h2>
+    ${viewing ? '' : '<p class="no-print">Você receberá um e-mail de confirmação com todos os detalhes.</p>'}
     <div class="proto-box">
       <div class="proto-label">Número do protocolo</div>
       <div class="proto-num">${proto}</div>
     </div>
     <div class="confirm-card" style="text-align:left;">
       <div class="cr"><span class="cl">Serviço</span><span class="cv">${selSvc ? selSvc.name : '—'}</span></div>
-      <div class="cr"><span class="cl">Data</span><span class="cv">${selDate ? String(selDate).padStart(2,'0') + '/05/2026' : '—'}</span></div>
-      <div class="cr"><span class="cl">Horário</span><span class="cv">${selSlot || '—'}</span></div>
+      <div class="cr"><span class="cl">Data</span><span class="cv">${dateStr}</span></div>
+      <div class="cr"><span class="cl">Horário</span><span class="cv">${timeStr}</span></div>
       <div class="cr"><span class="cl">Local</span><span class="cv">SEFAZ Sede Central — R. Carlos Gomes, 690, Comércio</span></div>
     </div>
     <div class="confirm-card shaded" style="text-align:left;">
