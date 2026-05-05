@@ -1,0 +1,1243 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[B +2px] SEFAZ Salvador — Agendamento de Serviços</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Sora:wght@500;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary:   #ffffff;
+  --bg-secondary: #f5f5f3;
+  --bg-tertiary:  #edede9;
+  --bg-success:   #eaf3de;
+  --bg-warning:   #faeeda;
+  --bg-danger:    #fcebeb;
+  --text-primary:   #1a1a18;
+  --text-secondary: #5a5a56;
+  --text-tertiary:  #9a9a94;
+  --text-success:   #27500a;
+  --text-warning:   #633806;
+  --text-danger:    #791f1f;
+  --border-light:  rgba(26,26,24,0.10);
+  --border-medium: rgba(26,26,24,0.20);
+  --brand:       #1B3C6E;
+  --brand-light: #E8EFF8;
+  --brand-text:  #0C447C;
+  --govbr:       #1351B4;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --font-sans:    'DM Sans', system-ui, sans-serif;
+  --font-display: 'Sora', system-ui, sans-serif;
+}
+
+html, body {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-primary);
+}
+.logo-wrap { display: flex; align-items: center; gap: 10px; }
+.logo-box {
+  width: 32px; height: 32px; background: var(--brand);
+  border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.logo-box svg { width: 17px; height: 17px; }
+.logo-name { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--brand); line-height: 1.2; }
+.logo-dept { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .05em; }
+.user-row  { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--text-secondary); }
+.av {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--brand-light); color: var(--brand-text);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+}
+.av-sep { color: var(--border-medium); margin: 0 3px; }
+.av-logout {
+  font-size: 14px; color: var(--text-tertiary);
+  cursor: pointer; background: none; border: none; font-family: var(--font-sans);
+}
+.av-logout:hover { color: var(--text-secondary); }
+
+/* ── NAV TABS ── */
+.nav-tabs {
+  display: flex; border-bottom: 1px solid var(--border-light);
+  background: var(--bg-primary); padding: 0 20px; gap: 2px;
+}
+.nav-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 11px 14px; font-size: 15px; color: var(--text-secondary);
+  cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: color .15s, border-color .15s;
+  background: none; border-left: none; border-right: none; border-top: none;
+  font-family: var(--font-sans);
+}
+.nav-tab:hover { color: var(--text-primary); }
+.nav-tab.active { color: var(--brand); font-weight: 500; border-bottom-color: var(--brand); }
+.nav-tab svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ── CONTENT / SCREEN ── */
+.content { padding: 24px; }
+.screen  { display: none; }
+.screen.active { display: block; }
+
+/* ── BUTTONS ── */
+.btn-p {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 20px; background: var(--brand); color: #fff;
+  border: none; border-radius: var(--radius-md);
+  font-size: 15px; font-weight: 500; cursor: pointer;
+  font-family: var(--font-sans); transition: opacity .15s; line-height: 1;
+}
+.btn-p:hover    { opacity: .86; }
+.btn-p:disabled { opacity: .4; cursor: default; }
+.btn-p.full     { width: 100%; }
+
+.btn-s {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 8px 16px; background: transparent; color: var(--text-primary);
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+  font-size: 15px; font-weight: 500; cursor: pointer;
+  font-family: var(--font-sans); transition: background .12s; line-height: 1;
+}
+.btn-s:hover { background: var(--bg-secondary); }
+.btn-s.full  { width: 100%; margin-top: 8px; }
+
+.btn-danger {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 7px 13px; background: transparent; color: var(--text-danger);
+  border: 1px solid #f09595; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: var(--font-sans); transition: background .12s, border-color .12s; line-height: 1;
+}
+.btn-danger:hover { background: var(--bg-danger); border-color: #f09595; }
+
+.btn-sm-s {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 7px 13px; background: transparent; color: var(--text-primary);
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: var(--font-sans); transition: background .12s; line-height: 1;
+}
+.btn-sm-s:hover { background: var(--bg-secondary); }
+
+/* ── GOV.BR / CERT BUTTONS ── */
+.btn-govbr {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 13px 20px;
+  background: var(--govbr); color: #fff;
+  border: none; border-radius: var(--radius-md);
+  font-size: 16px; font-weight: 500; cursor: pointer;
+  font-family: var(--font-sans); transition: opacity .15s; line-height: 1;
+  margin-bottom: 12px;
+}
+.btn-govbr:hover { opacity: .88; }
+.btn-govbr svg   { width: 20px; height: 20px; flex-shrink: 0; }
+
+.btn-cert {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 13px 20px;
+  background: var(--bg-primary); color: var(--text-primary);
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+  font-size: 16px; font-weight: 500; cursor: pointer;
+  font-family: var(--font-sans); transition: background .12s; line-height: 1;
+}
+.btn-cert:hover { background: var(--bg-secondary); }
+.btn-cert svg   { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-secondary); }
+
+/* ── LOGIN CARD ── */
+.login-outer { max-width: 400px; margin: 0 auto; }
+.login-card  {
+  background: var(--bg-primary); border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg); padding: 32px 28px;
+}
+.login-head { text-align: center; margin-bottom: 28px; }
+.login-icon {
+  width: 48px; height: 48px; background: var(--brand);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+}
+.login-icon svg { width: 25px; height: 25px; }
+.login-head h2  { font-family: var(--font-display); font-size: 19px; font-weight: 600; margin-bottom: 5px; }
+.login-head p   { font-size: 15px; color: var(--text-secondary); line-height: 1.55; }
+.login-divider  {
+  display: flex; align-items: center; gap: 10px;
+  margin: 20px 0; font-size: 13px; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.login-divider::before, .login-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border-light);
+}
+.login-foot {
+  text-align: center; font-size: 13px; color: var(--text-tertiary);
+  margin-top: 18px; line-height: 1.7;
+}
+.login-foot a { color: var(--brand-text); text-decoration: none; }
+
+/* ── FORM FIELDS ── */
+.field-group          { margin-bottom: 14px; }
+.field-group label    {
+  display: block; font-size: 13px; font-weight: 500;
+  color: var(--text-secondary); margin-bottom: 5px;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.field-group input,
+.field-group select   {
+  width: 100%; font-size: 16px; padding: 9px 12px;
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+  font-family: var(--font-sans); color: var(--text-primary);
+  background: var(--bg-primary); outline: none; transition: border-color .15s;
+}
+.field-group input:focus,
+.field-group select:focus { border-color: var(--brand); }
+
+/* ── STATUS BADGES ── */
+.badge {
+  display: inline-flex; align-items: center; padding: 3px 10px;
+  border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;
+}
+.badge-agendado   { background: var(--brand-light); color: var(--brand-text); }
+.badge-concluido  { background: var(--bg-success);  color: var(--text-success); }
+.badge-cancelado  { background: var(--bg-danger);   color: var(--text-danger); }
+.badge-reagendado { background: var(--bg-warning);  color: var(--text-warning); }
+
+/* ── FILTER ROW ── */
+.filter-row { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; }
+.filter-row input {
+  flex: 1; font-size: 15px; padding: 8px 12px;
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+  font-family: var(--font-sans); color: var(--text-primary);
+  background: var(--bg-primary); outline: none;
+}
+.filter-row input:focus { border-color: var(--brand); }
+.filter-select {
+  font-size: 14px; padding: 8px 10px;
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+  font-family: var(--font-sans); color: var(--text-primary);
+  background: var(--bg-primary); cursor: pointer; outline: none;
+}
+
+/* ── AGEND TABLE ── */
+.agend-table-wrap {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.agend-table {
+  width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed;
+}
+.agend-table colgroup col:nth-child(1) { width: auto; }
+.agend-table colgroup col:nth-child(2) { width: 108px; }
+.agend-table colgroup col:nth-child(3) { width: 76px; }
+.agend-table colgroup col:nth-child(4) { width: 96px; }
+.agend-table colgroup col:nth-child(5) { width: 260px; }
+.agend-table thead th {
+  font-size: 12px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--text-tertiary);
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+}
+.agend-table thead th:last-child { text-align: right; }
+.agend-table tbody tr {
+  border-bottom: 1px solid var(--border-light);
+  transition: background .1s;
+}
+.agend-table tbody tr:last-child { border-bottom: none; }
+.agend-table tbody tr:hover { background: var(--bg-secondary); }
+.agend-table td {
+  padding: 12px 14px; font-size: 15px; vertical-align: middle;
+  color: var(--text-primary);
+}
+.agend-td-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agend-td-meta { font-size: 14px; color: var(--text-secondary); white-space: nowrap; }
+.agend-td-acts { text-align: right; white-space: nowrap; padding: 12px 16px 12px 14px; }
+.agend-td-acts .btn-sm-s  { margin-left: 5px; }
+.agend-td-acts .btn-danger{ margin-left: 5px; }
+
+/* ── EMPTY STATE ── */
+.empty-state     { text-align: center; padding: 48px 20px; color: var(--text-tertiary); }
+.empty-state svg { width: 34px; height: 34px; margin: 0 auto 10px; display: block; opacity: .3; }
+.empty-state p   { font-size: 15px; }
+
+/* ── MODAL ── */
+body.modal-open { overflow: hidden; }
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  animation: fadeIn .15s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-box {
+  background: var(--bg-primary); border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg); padding: 24px; width: 420px; max-width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  animation: slideUp .15s ease;
+}
+@keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+.modal-title   { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+.modal-sub     { font-size: 15px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.55; }
+.modal-preview {
+  background: var(--bg-secondary); border-radius: var(--radius-md);
+  padding: 12px; font-size: 15px; margin-bottom: 14px;
+}
+.modal-preview strong { display: block; font-weight: 500; margin-bottom: 3px; }
+.modal-preview span   { color: var(--text-secondary); font-size: 14px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+
+/* ── STEP BAR ── */
+.step-bar {
+  display: flex; align-items: center;
+  padding: 0 22px; background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+.step-it {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 10px 10px 0; font-size: 14px; color: var(--text-tertiary);
+}
+.step-it.done   { color: var(--brand); }
+.step-it.active { color: var(--brand); font-weight: 500; }
+.step-n {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1px solid var(--border-medium);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500; background: var(--bg-primary); flex-shrink: 0;
+}
+.step-it.active .step-n { background: var(--brand); color: #fff; border-color: var(--brand); }
+.step-it.done   .step-n { background: var(--brand-light); color: var(--brand-text); border-color: var(--brand); }
+.step-arr { color: var(--border-medium); font-size: 13px; padding-right: 8px; }
+
+/* ── SECTION HEADERS ── */
+.section-h { font-size: 16px; font-weight: 500; margin-bottom: 3px; }
+.section-s { font-size: 14px; color: var(--text-secondary); margin-bottom: 18px; }
+
+/* ── SERVICE SELECTOR ── */
+.search-bar { display: flex; gap: 8px; margin-bottom: 10px; }
+.search-bar input {
+  flex: 1; font-size: 15px; padding: 8px 12px;
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+  font-family: var(--font-sans); color: var(--text-primary); background: var(--bg-primary); outline: none;
+}
+.search-bar input:focus { border-color: var(--brand); }
+
+.cat-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+.chip {
+  padding: 4px 11px; font-size: 13px; border-radius: 20px;
+  border: 1px solid var(--border-medium); background: var(--bg-primary);
+  cursor: pointer; color: var(--text-secondary); transition: all .12s; font-family: var(--font-sans);
+}
+.chip.active { background: var(--brand-light); color: var(--brand-text); border-color: var(--brand); }
+
+/* Layout principal do passo 1: lista à esq, docs à dir */
+.svc-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  /* A altura se ajusta ao maior dos dois lados, sem scroll no layout */
+}
+
+/* ── Lista de serviços (scroll interno) ── */
+.svc-list {
+  border: 1px solid var(--border-light); border-radius: var(--radius-md);
+  overflow-y: auto;
+  /* Altura suficiente para ~8 itens; cresce com a lista de docs ao lado */
+  max-height: 420px;
+}
+.svc-list::-webkit-scrollbar       { width: 4px; }
+.svc-list::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
+
+.svc-item {
+  display: flex; align-items: flex-start; gap: 9px; padding: 9px 13px;
+  border-bottom: 1px solid var(--border-light); cursor: pointer;
+  font-size: 14px; transition: background .1s;
+}
+.svc-item:last-child { border-bottom: none; }
+.svc-item:hover      { background: var(--bg-secondary); }
+.svc-item.sel        { background: var(--brand-light); }
+.svc-radio {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid var(--border-medium); margin-top: 2px;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .12s;
+}
+.svc-item.sel .svc-radio           { background: var(--brand); border-color: var(--brand); }
+.svc-item.sel .svc-radio::after    { content:''; width:5px; height:5px; border-radius:50%; background:#fff; display:block; }
+.svc-name { font-weight: 500; color: var(--text-primary); line-height: 1.35; }
+.svc-code { font-size: 12px; color: var(--text-tertiary); margin-top: 1px; }
+
+/* ── Painel de documentação (scroll interno, espelha altura da lista) ── */
+.doc-panel {
+  background: var(--bg-secondary); border: 1px solid var(--border-light);
+  border-radius: var(--radius-md); padding: 14px;
+  /* Scroll interno quando docs > viewport */
+  max-height: 420px; overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.doc-panel::-webkit-scrollbar       { width: 4px; }
+.doc-panel::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
+
+.doc-panel-title {
+  font-size: 12px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--text-tertiary); margin-bottom: 10px;
+  flex-shrink: 0;
+}
+.doc-svc-name {
+  font-size: 15px; font-weight: 500; margin-bottom: 11px;
+  padding-bottom: 9px; border-bottom: 1px solid var(--border-light); flex-shrink: 0;
+}
+.doc-count {
+  font-size: 12px; color: var(--text-tertiary); margin-bottom: 8px; flex-shrink: 0;
+}
+.doc-item {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 6px 0; border-bottom: 1px solid var(--border-light); font-size: 14px;
+  flex-shrink: 0;
+}
+.doc-item:last-of-type { border-bottom: none; }
+.doc-num  {
+  min-width: 18px; height: 18px; border-radius: 4px;
+  background: var(--brand-light); color: var(--brand-text);
+  font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.doc-obs {
+  margin-top: 10px; background: var(--brand-light); border-radius: 6px;
+  padding: 8px 10px; font-size: 13px; color: var(--brand-text); line-height: 1.5; flex-shrink: 0;
+}
+.doc-placeholder { font-size: 14px; color: var(--text-tertiary); }
+
+/* ── Rich text doc content (output TinyMCE) ── */
+.rich-doc-content { font-size: 14px; line-height: 1.65; color: var(--text-primary); }
+.rich-doc-content ol { padding-left: 22px; margin: 0; }
+.rich-doc-content ol li {
+  padding: 5px 0; border-bottom: 1px solid var(--border-light);
+}
+.rich-doc-content ol li:last-child { border-bottom: none; }
+.rich-doc-content p {
+  margin-top: 12px; padding: 8px 10px; border-radius: 6px; font-size: 13px;
+  background: var(--brand-light); color: var(--brand-text); line-height: 1.5;
+}
+.rich-doc-content ul { padding-left: 22px; margin: 0; }
+.rich-doc-content ul li { padding: 4px 0; border-bottom: 1px solid var(--border-light); }
+.rich-doc-content ul li:last-child { border-bottom: none; }
+
+/* ── Banner de serviço selecionado (após escolha no passo 1) ── */
+.svc-confirm-panel {
+  margin-top: 14px; padding: 12px 16px;
+  background: var(--brand-light); border: 1px solid rgba(27,60,110,.18);
+  border-radius: var(--radius-md); display: none;
+  align-items: center; gap: 12px;
+}
+.svc-confirm-panel.visible  { display: flex; }
+.svc-confirm-label { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; color: var(--brand-text); margin-bottom: 2px; }
+.svc-confirm-name  { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+.svc-confirm-code  { font-size: 13px; color: var(--text-secondary); }
+
+/* ── CONFIRM CARD ── */
+.confirm-card {
+  background: var(--bg-primary); border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg); padding: 18px; margin-bottom: 14px;
+}
+.confirm-card.shaded { background: var(--bg-secondary); }
+.cr {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 7px 0; border-bottom: 1px solid var(--border-light); font-size: 15px; gap: 16px;
+}
+.cr:last-child { border-bottom: none; }
+.cl { color: var(--text-secondary); white-space: nowrap; }
+.cv { font-weight: 500; text-align: right; }
+
+/* Docs na tela de confirmação: coluna única */
+.doc-grid-confirm {
+  display: flex; flex-direction: column;
+}
+.doc-item-confirm {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 6px 0; border-bottom: 1px solid var(--border-light);
+  font-size: 14px;
+}
+.doc-grid-confirm .doc-item-confirm:last-child { border-bottom: none; }
+
+.warn-strip {
+  display: flex; align-items: flex-start; gap: 7px; padding: 10px 13px;
+  background: #fff4e6; border: 1px solid #f5c07a; border-radius: 7px;
+  font-size: 14px; color: #8a4500; margin-bottom: 16px; line-height: 1.5;
+}
+
+/* ── FOOTER ACTIONS ── */
+.footer {
+  display: flex; justify-content: flex-end; gap: 8px;
+  margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-light);
+}
+
+/* ── CALENDAR ── */
+.date-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.cal-header  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-month   { font-size: 15px; font-weight: 500; }
+.cal-nav {
+  width: 26px; height: 26px; border: 1px solid var(--border-medium); border-radius: 6px;
+  background: transparent; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; color: var(--text-secondary); font-size: 15px;
+  font-family: var(--font-sans); transition: background .12s;
+}
+.cal-nav:hover { background: var(--bg-secondary); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-dow  { text-align: center; font-size: 12px; color: var(--text-tertiary); padding: 3px 0; font-weight: 500; }
+.cal-day  {
+  text-align: center; font-size: 14px; padding: 6px 2px;
+  border-radius: 5px; cursor: pointer; transition: background .1s;
+  color: var(--text-primary); font-family: var(--font-sans);
+}
+.cal-day.empty   { pointer-events: none; }
+.cal-day:hover:not(.unav):not(.empty) { background: var(--bg-secondary); }
+.cal-day.unav    { color: var(--text-tertiary); text-decoration: line-through; cursor: default; }
+.cal-day.csel    { background: var(--brand); color: #fff; font-weight: 500; }
+.cal-legend      { display: flex; gap: 14px; margin-top: 12px; font-size: 13px; color: var(--text-secondary); flex-wrap: wrap; }
+.cal-legend-item { display: flex; align-items: center; gap: 5px; }
+.cal-legend-dot  { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex-shrink: 0; }
+
+/* ── PRINT ── */
+@media print {
+  html, body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .app-shell { border: none; border-radius: 0; margin: 0; max-width: 100%; }
+  .topbar, #nav-tabs, .step-bar, .no-print { display: none !important; }
+  .content { padding: 0; }
+  .success-wrap { max-width: 100%; text-align: left; }
+  .success-wrap h2 { text-align: center; margin-bottom: 12px; }
+  .proto-box {
+    border: 1px solid #ccc; border-radius: 8px;
+    margin-bottom: 14px; text-align: center;
+    background: #f5f5f3 !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .confirm-card {
+    border: 1px solid #ccc !important; border-radius: 8px !important;
+    margin-bottom: 12px !important; padding: 14px 16px !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .confirm-card.shaded {
+    background: #f5f5f3 !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .doc-num {
+    background: #e0e8f4 !important; color: #0c447c !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .doc-obs {
+    background: #e8eff8 !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .proto-label { color: #888 !important; }
+  .cl { color: #5a5a56 !important; }
+  .doc-panel-title { color: #9a9a94 !important; }
+  .btn-p, .btn-s { display: none !important; }
+}
+
+.slots-date-label  { font-size: 14px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; }
+.slots-group-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-tertiary); margin-bottom: 7px; margin-top: 13px; font-weight: 500;
+}
+.slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.slot {
+  padding: 8px 4px; text-align: center; font-size: 13px; font-weight: 500;
+  border: 1px solid var(--border-medium); border-radius: 6px; cursor: pointer;
+  background: var(--bg-primary); transition: all .12s; color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+.slot:hover { border-color: var(--brand); color: var(--brand); }
+.slot.ssel  { background: var(--brand); color: #fff; border-color: var(--brand); }
+.slot.busy  {
+  background: var(--bg-secondary); color: var(--text-tertiary);
+  cursor: default; text-decoration: line-through; border-color: var(--border-light);
+}
+.slots-empty { font-size: 14px; color: var(--text-tertiary); }
+
+/* ── SUCCESS ── */
+.success-wrap { max-width: 440px; margin: 0 auto; text-align: center; }
+.success-ico  {
+  width: 50px; height: 50px; border-radius: 50%; background: var(--bg-success);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;
+}
+.success-ico svg      { width: 24px; height: 24px; }
+.success-wrap h2      { font-family: var(--font-display); font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+.success-wrap > p     { font-size: 14px; color: var(--text-secondary); margin-bottom: 18px; }
+.proto-box     {
+  background: var(--bg-secondary); border: 1px solid var(--border-light);
+  border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;
+}
+.proto-label { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-tertiary); margin-bottom: 3px; font-weight: 500; }
+.proto-num   { font-family: var(--font-display); font-size: 23px; font-weight: 600; color: var(--brand); letter-spacing: .04em; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo-wrap">
+      <div class="logo-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-name">SEFAZ Salvador</div>
+        <div class="logo-dept">Secretaria Municipal da Fazenda</div>
+      </div>
+    </div>
+    <div id="topbar-right">
+      <button class="btn-p" onclick="showScreen('login')" style="font-size: 14px;padding:8px 16px;">Entrar</button>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div id="nav-tabs" style="display:none;">
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tab-consulta" onclick="switchTab('consulta')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Meus agendamentos
+      </button>
+      <button class="nav-tab" id="tab-novo" onclick="switchTab('novo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+        Novo agendamento
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ LOGIN ══ -->
+  <div id="screen-login" class="screen active">
+    <div class="content">
+      <div class="login-outer">
+        <div class="login-card">
+          <div class="login-head">
+            <div class="login-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <h2>Agendamento de serviços</h2>
+            <p>Acesse com sua conta gov.br ou certificado digital para agendar atendimentos na SEFAZ Salvador.</p>
+          </div>
+          <button class="btn-govbr" onclick="doLogin()">
+            <svg viewBox="0 0 24 24"><polygon points="12,2 14.4,9.2 22,9.2 16,13.8 18.4,21 12,16.4 5.6,21 8,13.8 2,9.2 9.6,9.2" fill="rgba(255,255,255,0.92)"/></svg>
+            Entrar com gov.br
+          </button>
+          <div class="login-divider">ou</div>
+          <button class="btn-cert" onclick="doLogin()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              <circle cx="12" cy="16" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+            Entrar com Certificado Digital
+          </button>
+          <p class="login-foot">
+            Ao acessar, você concorda com os <a href="#">Termos de uso</a><br/>
+            e a <a href="#">Política de privacidade</a> da SEFAZ Salvador.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MEUS AGENDAMENTOS ══ -->
+  <div id="screen-consulta" class="screen">
+    <div class="content">
+      <div class="section-h">Meus agendamentos</div>
+      <div class="section-s">Gerencie seus agendamentos ativos e histórico de atendimentos</div>
+      <div class="filter-row">
+        <input type="text" placeholder="Buscar por serviço ou protocolo..." oninput="filterAgend(this.value)"/>
+        <select class="filter-select" onchange="filterStatus(this.value)">
+          <option value="">Todos os status</option>
+          <option value="agendado">Agendado</option>
+          <option value="concluido">Concluído</option>
+          <option value="cancelado">Cancelado</option>
+          <option value="reagendado">Reagendado</option>
+        </select>
+      </div>
+      <div id="agend-list"></div>
+    </div>
+  </div>
+
+  <!-- ══ NOVO AGENDAMENTO ══
+       Barra: 1. Escolha do serviço | 2. Data e horário | 3. Confirmação | 4. Conclusão
+       Docs do serviço: embutidas no painel lateral do passo 1 (etapa implícita)
+  ══ -->
+  <div id="screen-novo" class="screen">
+    <div class="step-bar">
+      <div class="step-it active" id="ns1"><div class="step-n">1</div><span>Escolha do serviço</span></div>
+      <div class="step-arr">›</div>
+      <div class="step-it" id="ns2"><div class="step-n">2</div><span>Data e horário</span></div>
+      <div class="step-arr">›</div>
+      <div class="step-it" id="ns3"><div class="step-n">3</div><span>Confirmação</span></div>
+      <div class="step-arr">›</div>
+      <div class="step-it" id="ns4"><div class="step-n">4</div><span>Conclusão</span></div>
+    </div>
+    <div class="content" id="novo-content"></div>
+  </div>
+
+</div><!-- /app-shell -->
+
+<!-- Modal cancelamento (overlay fixed) -->
+<div id="modal-cancel" style="display:none;">
+  <div class="modal-backdrop" onclick="handleBackdropClick(event)">
+    <div class="modal-box">
+      <div class="modal-title">Cancelar agendamento</div>
+      <div class="modal-sub">Tem certeza que deseja cancelar? O não comparecimento repetido pode restringir novos agendamentos por 30 dias.</div>
+      <div class="modal-preview">
+        <strong id="cancel-svc-name"></strong>
+        <span id="cancel-svc-date"></span>
+      </div>
+      <div class="field-group" style="margin-bottom:0;">
+        <label>Motivo do cancelamento</label>
+        <select id="cancel-motivo">
+          <option value="">Selecione um motivo</option>
+          <option>Problema pessoal</option>
+          <option>Documentação incompleta</option>
+          <option>Engano na solicitação</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-s" onclick="closeModal()">Voltar</button>
+        <button class="btn-danger" onclick="confirmCancel()">Confirmar cancelamento</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════
+   DADOS — SERVIÇOS
+   IPTU-001 tem 20 documentos (exemplo real)
+════════════════════════════════════ */
+const SERVICES = [
+  {
+    id: 1, cat: 'IPTU', code: 'IPTU-001',
+    name: 'Parcelamento de débito de IPTU',
+    docs: [
+      'Documento de identidade com foto (RG, CNH ou passaporte)',
+      'CPF do requerente',
+      'Comprovante de residência atualizado (últimos 90 dias)',
+      'Carnê de IPTU com débito em aberto',
+      'Certidão de propriedade do imóvel (Cartório de Registro de Imóveis)',
+      'Escritura pública de compra e venda ou contrato registrado',
+      'Declaração de Imposto de Renda (última entrega) ou declaração de isento',
+      'Certidão negativa de débitos municipais — demais tributos',
+      'Procuração pública ou particular com firma reconhecida (se representado por terceiro)',
+      'Documento de identidade do procurador (se aplicável)',
+      'Planta do imóvel aprovada pela prefeitura ou croqui atualizado',
+      'Habite-se ou Alvará de construção (imóveis com construção)',
+      'Certidão de situação cadastral do imóvel (emitida pela SEFAZ)',
+      'Comprovante de pagamento da última parcela (se parcelamento anterior)',
+      'Declaração de hipossuficiência econômica (se solicitar desconto de juros)',
+      'Laudo de avaliação de imóvel assinado por engenheiro com ART (se contestar valor venal)',
+      'Certidão de óbito e inventário (em caso de espólio)',
+      'Alvará judicial ou formal de partilha (se imóvel em inventário)',
+      'Requerimento de parcelamento preenchido e assinado (formulário da SEFAZ)',
+      'Termo de responsabilidade e ciência das condições de parcelamento assinado',
+    ],
+    obs: 'Parcelamento em até 24x para débitos acima de R$ 1.000. Presença obrigatória do titular ou procurador habilitado.'
+  },
+  {
+    id: 2, cat: 'IPTU', code: 'IPTU-002',
+    name: 'Isenção de IPTU — idoso',
+    docs: ['RG ou CNH', 'CPF', 'Comprovante de residência', 'Declaração de renda'],
+    obs: 'Benefício para contribuintes com 60+ anos e renda até 2 salários mínimos.'
+  },
+  {
+    id: 3, cat: 'IPTU', code: 'IPTU-003',
+    name: 'Revisão de base de cálculo de IPTU',
+    docs: ['RG ou CNH', 'Escritura do imóvel', 'Laudo técnico com ART', 'Carnê de IPTU vigente'],
+    obs: null
+  },
+  {
+    id: 4, cat: 'ISS', code: 'ISS-001',
+    name: 'Inscrição de prestador de serviços',
+    docs: ['CNPJ ou CPF', 'Contrato social ou MEI', 'Comprovante de endereço', 'Alvará provisório'],
+    obs: 'Prazo de análise: até 5 dias úteis.'
+  },
+  {
+    id: 5, cat: 'ISS', code: 'ISS-002',
+    name: 'Parcelamento de débito de ISS',
+    docs: ['CNPJ', 'Relatório de débitos do portal', 'Documento do representante legal'],
+    obs: null
+  },
+  {
+    id: 6, cat: 'ISS', code: 'ISS-003',
+    name: 'Impugnação de auto de infração — ISS',
+    docs: ['RG/CNH', 'CNPJ', 'Cópia do auto de infração', 'Procuração (se terceiro)', 'Documentos da defesa'],
+    obs: 'Prazo: 30 dias corridos da notificação.'
+  },
+  {
+    id: 7, cat: 'Certidões', code: 'CND-001',
+    name: 'Certidão negativa de débitos — PF',
+    docs: ['RG ou CNH', 'CPF'],
+    obs: 'Validade de 60 dias.'
+  },
+  {
+    id: 8, cat: 'Certidões', code: 'CND-002',
+    name: 'Certidão negativa de débitos — PJ',
+    docs: ['CNPJ', 'Contrato social', 'Documento do representante'],
+    obs: null
+  },
+  {
+    id: 9, cat: 'Certidões', code: 'CND-003',
+    name: 'Certidão de valor venal do imóvel',
+    docs: ['RG ou CNH', 'Inscrição imobiliária', 'Escritura do imóvel'],
+    obs: null
+  },
+  {
+    id: 10, cat: 'Nota Fiscal', code: 'NFS-001',
+    name: 'Cadastro de tomador de serviço',
+    docs: ['CNPJ ou CPF', 'E-mail institucional'],
+    obs: null
+  },
+  {
+    id: 11, cat: 'Nota Fiscal', code: 'NFS-002',
+    name: 'Cancelamento de nota fiscal eletrônica',
+    docs: ['CPF/CNPJ', 'Número da NFS-e', 'Motivo por escrito'],
+    obs: 'Cancelamento só dentro do mês de emissão.'
+  },
+  {
+    id: 12, cat: 'Outros', code: 'ATD-001',
+    name: 'Restituição de pagamento indevido',
+    docs: ['RG ou CNH', 'Comprovante do pagamento', 'Dados bancários', 'Requerimento preenchido'],
+    obs: null
+  },
+];
+
+/* Slots 08:00 – 16:00, a cada 30 min */
+function buildSlots() {
+  const s = [];
+  for (let h = 8; h <= 16; h++) {
+    for (let m = 0; m < 60; m += 30) {
+      if (h === 16 && m > 0) break;
+      s.push(String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0'));
+    }
+  }
+  return s;
+}
+const ALL_SLOTS    = buildSlots();
+const MANHA_SLOTS  = ALL_SLOTS.filter(t => parseInt(t) < 12);
+const TARDE_SLOTS  = ALL_SLOTS.filter(t => parseInt(t) >= 12);
+const BUSY_SLOTS   = ['08:00','09:30','10:30','13:00','14:00','15:30'];
+const UNAVAIL_DAYS = [3, 9, 10, 17, 18, 24, 25, 31];
+
+let agendamentos = [
+  { id:101, proto:'AGD-2026-00421', svc:'Parcelamento de débito de IPTU',    code:'IPTU-001', date:'14/05/2026', time:'09:00', status:'agendado'  },
+  { id:102, proto:'AGD-2026-00387', svc:'Certidão negativa de débitos — PF', code:'CND-001',  date:'22/04/2026', time:'14:30', status:'concluido' },
+  { id:103, proto:'AGD-2026-00310', svc:'Inscrição de prestador de serviços',code:'ISS-001',  date:'03/04/2026', time:'10:00', status:'cancelado' },
+  { id:104, proto:'AGD-2026-00290', svc:'Certidão de valor venal do imóvel', code:'CND-003',  date:'19/05/2026', time:'11:30', status:'agendado'  },
+  { id:105, proto:'AGD-2026-00271', svc:'Parcelamento de débito de ISS',     code:'ISS-002',  date:'28/03/2026', time:'15:00', status:'concluido' },
+];
+
+/* ── estado ── */
+let novoStep = 1, selSvc = null, selCat = '';
+let cSelDate = null, cSelSlot = null;
+let selDate = null, selSlot = null;
+let filteredStatus = '', filteredQ = '', cancelTarget = null;
+
+/* ════════════════════
+   NAVEGAÇÃO
+════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function doLogin() {
+  document.getElementById('topbar-right').innerHTML =
+    '<div class="user-row"><div class="av">JS</div><span>João da Silva</span>' +
+    '<span class="av-sep">|</span>' +
+    '<button class="av-logout" onclick="doLogout()">Sair</button></div>';
+  document.getElementById('nav-tabs').style.display = 'block';
+  switchTab('consulta');
+}
+
+function doLogout() {
+  document.getElementById('nav-tabs').style.display = 'none';
+  document.getElementById('topbar-right').innerHTML =
+    '<button class="btn-p" onclick="showScreen(\'login\')" style="font-size: 14px;padding:8px 16px;">Entrar</button>';
+  showScreen('login');
+}
+
+function switchTab(t) {
+  document.getElementById('tab-consulta').className = 'nav-tab' + (t === 'consulta' ? ' active' : '');
+  document.getElementById('tab-novo').className     = 'nav-tab' + (t === 'novo'     ? ' active' : '');
+  if (t === 'consulta') { showScreen('consulta'); renderAgendList(); }
+  else { showScreen('novo'); novoStep = 1; selSvc = null; cSelDate = null; cSelSlot = null; selCat = ''; renderNovoStep(); }
+}
+
+/* ════════════════════
+   LISTA AGENDAMENTOS
+════════════════════ */
+function badgeHTML(s) {
+  const cls = { agendado:'badge-agendado', concluido:'badge-concluido', cancelado:'badge-cancelado', reagendado:'badge-reagendado' };
+  const lbl = { agendado:'Agendado', concluido:'Concluído', cancelado:'Cancelado', reagendado:'Reagendado' };
+  return `<span class="badge ${cls[s]}">${lbl[s]}</span>`;
+}
+
+function renderAgendList() {
+  const list = agendamentos.filter(a =>
+    (filteredStatus === '' || a.status === filteredStatus) &&
+    (filteredQ === '' || a.svc.toLowerCase().includes(filteredQ) || a.proto.toLowerCase().includes(filteredQ))
+  );
+  const el = document.getElementById('agend-list');
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' +
+      '<rect x="3" y="4" width="18" height="18" rx="2"/>' +
+      '<line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>' +
+      '</svg><p>Nenhum agendamento encontrado.</p></div>';
+    return;
+  }
+  const rows = list.map(a => {
+    const ativo = a.status === 'agendado';
+    const acts  = ativo
+      ? `<button class="btn-sm-s" onclick="iniciarReagendamento(${a.id})">Reagendar</button>` +
+        `<button class="btn-danger" onclick="openCancel(${a.id})">Cancelar</button>`
+      : '';
+    return `<tr>
+      <td class="agend-td-name" title="${a.svc}">${a.svc}</td>
+      <td class="agend-td-meta">${a.date}</td>
+      <td class="agend-td-meta">${a.time}</td>
+      <td class="agend-td-meta">${badgeHTML(a.status)}</td>
+      <td class="agend-td-acts">${acts}</td>
+    </tr>`;
+  }).join('');
+  el.innerHTML =
+    `<div class="agend-table-wrap">
+      <table class="agend-table">
+        <colgroup>
+          <col/><col/><col/><col/><col/>
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Serviço</th>
+            <th>Data</th>
+            <th>Horário</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+function filterAgend(q)  { filteredQ = q.toLowerCase(); renderAgendList(); }
+function filterStatus(s) { filteredStatus = s; renderAgendList(); }
+
+/* ════════════════════
+   CANCELAR
+════════════════════ */
+function openCancel(id) {
+  cancelTarget = id;
+  const a = agendamentos.find(x => x.id === id);
+  document.getElementById('cancel-svc-name').textContent = a.svc;
+  document.getElementById('cancel-svc-date').textContent = a.date + ' às ' + a.time;
+  document.getElementById('cancel-motivo').value = '';
+  document.getElementById('modal-cancel').style.display = 'block';
+  document.body.classList.add('modal-open');
+}
+function closeModal() {
+  document.getElementById('modal-cancel').style.display = 'none';
+  document.body.classList.remove('modal-open');
+}
+function handleBackdropClick(e) {
+  if (e.target === e.currentTarget) closeModal();
+}
+function confirmCancel() {
+  if (cancelTarget) { const a = agendamentos.find(x => x.id === cancelTarget); if (a) a.status = 'cancelado'; }
+  closeModal(); renderAgendList();
+}
+
+/* ════════════════════
+   REAGENDAR → passo 2
+════════════════════ */
+function iniciarReagendamento(id) {
+  const a = agendamentos.find(x => x.id === id);
+  if (!a) return;
+  selSvc = SERVICES.find(s => s.code === a.code) || null;
+  cSelDate = null; cSelSlot = null;
+  document.getElementById('tab-consulta').className = 'nav-tab';
+  document.getElementById('tab-novo').className     = 'nav-tab active';
+  showScreen('novo');
+  novoStep = 2;
+  renderNovoStep();
+}
+
+/* ════════════════════
+   STEP BAR
+════════════════════ */
+function updateStepBar(step) {
+  ['ns1','ns2','ns3','ns4'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    const n  = el.querySelector('.step-n');
+    el.className = 'step-it';
+    if      (i + 1 <  step) { el.classList.add('done');   n.textContent = '✓'; }
+    else if (i + 1 === step) { el.classList.add('active'); n.textContent = i + 1; }
+    else                     { n.textContent = i + 1; }
+  });
+}
+
+function renderNovoStep() {
+  updateStepBar(novoStep);
+  const c = document.getElementById('novo-content');
+  if (novoStep === 1) { c.innerHTML = renderStepSvc();     bindSvcList(); }
+  if (novoStep === 2) { c.innerHTML = renderStepDate(); }
+  if (novoStep === 3) { c.innerHTML = renderStepConfirm(); }
+  if (novoStep === 4) { c.innerHTML = renderStepDone(); }
+}
+
+/* ════════════════════════════════
+   PASSO 1 — ESCOLHA DO SERVIÇO
+   Docs exibidas inline no painel lateral.
+   Lista e painel têm scroll interno independente.
+════════════════════════════════ */
+function renderStepSvc() {
+  return `
+  <div class="section-h">Escolha do serviço</div>
+  <div class="section-s">Selecione o serviço desejado. A documentação necessária é exibida ao lado assim que você faz a seleção.</div>
+  <div class="search-bar">
+    <input type="text" id="svc-search" placeholder="Buscar serviço..." oninput="renderSvcList()"/>
+  </div>
+  <div class="cat-chips" id="cat-chips">
+    <button class="chip active" onclick="setCat(this,'')">Todos</button>
+    <button class="chip" onclick="setCat(this,'IPTU')">IPTU</button>
+    <button class="chip" onclick="setCat(this,'ISS')">ISS</button>
+    <button class="chip" onclick="setCat(this,'Certidões')">Certidões</button>
+    <button class="chip" onclick="setCat(this,'Nota Fiscal')">Nota Fiscal</button>
+    <button class="chip" onclick="setCat(this,'Outros')">Outros</button>
+  </div>
+  <div class="svc-layout">
+    <div><div class="svc-list" id="svc-list"></div></div>
+    <div class="doc-panel" id="doc-panel">
+      <div class="doc-panel-title">Documentação necessária</div>
+      <div class="doc-placeholder">Selecione um serviço para ver os documentos exigidos.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button class="btn-s" onclick="switchTab('consulta')">Cancelar</button>
+    <button class="btn-p" id="btn-svc-next" disabled onclick="novoStep=2;renderNovoStep()">Continuar</button>
+  </div>`;
+}
+function bindSvcList() { renderSvcList(); }
+
+function renderSvcList() {
+  const q = (document.getElementById('svc-search') || { value: '' }).value.toLowerCase();
+  const list = SERVICES.filter(s =>
+    (selCat === '' || s.cat === selCat) &&
+    (q === '' || s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q))
+  );
+  const el = document.getElementById('svc-list');
+  if (!el) return;
+  el.innerHTML = list.map(s =>
+    `<div class="svc-item ${selSvc && selSvc.id === s.id ? 'sel' : ''}" onclick="pickSvc(${s.id})">
+      <div class="svc-radio"></div>
+      <div><div class="svc-name">${s.name}</div><div class="svc-code">${s.code}</div></div>
+    </div>`
+  ).join('');
+}
+
+function setCat(el, cat) {
+  selCat = cat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderSvcList();
+}
+
+function svcDocsHTML(svc) {
+  const items = svc.docs.map(d => `<li>${d}</li>`).join('');
+  const obs   = svc.obs ? `<p>ℹ ${svc.obs}</p>` : '';
+  return `<ol>${items}</ol>${obs}`;
+}
+
+function pickSvc(id) {
+  selSvc = SERVICES.find(s => s.id === id);
+  renderSvcList();
+
+  /* Painel de documentação */
+  const dp = document.getElementById('doc-panel');
+  if (dp) {
+    dp.innerHTML =
+      `<div class="doc-panel-title">Documentação necessária</div>
+       <div class="doc-svc-name">${selSvc.name}</div>
+       <div class="rich-doc-content">${svcDocsHTML(selSvc)}</div>`;
+    dp.scrollTop = 0;
+  }
+
+
+  const btn = document.getElementById('btn-svc-next');
+  if (btn) btn.removeAttribute('disabled');
+}
+
+/* ════════════════════════════════
+   PASSO 2 — DATA E HORÁRIO
+   Slots: 08:00 – 16:00, a cada 30 min
+════════════════════════════════ */
+function renderStepDate() {
+  let calCells = '';
+  ['D','S','T','Q','Q','S','S'].forEach(d => calCells += `<div class="cal-dow">${d}</div>`);
+  for (let i = 0; i < 4; i++) calCells += `<div class="cal-day empty"></div>`;
+  for (let d = 1; d <= 31; d++) {
+    const isU   = UNAVAIL_DAYS.includes(d);
+    const isSel = cSelDate === d;
+    calCells += `<div class="cal-day ${isSel ? 'csel' : ''} ${isU ? 'unav' : ''}" ${isU ? '' : `onclick="pickDate(${d})"`}>${d}</div>`;
+  }
+  const mkSlots = arr => arr.map(t => {
+    const isBusy = BUSY_SLOTS.includes(t);
+    const isSel  = cSelSlot === t;
+    return `<div class="slot ${isBusy ? 'busy' : ''} ${isSel ? 'ssel' : ''}" ${isBusy ? '' : `onclick="pickSlot('${t}')"`}>${t}</div>`;
+  }).join('');
+  const canNext = cSelDate && cSelSlot;
+  return `
+  <div class="section-h">Data e horário</div>
+  <div class="section-s">${selSvc ? selSvc.name : ''} · Maio 2026</div>
+  <div class="date-layout">
+    <div>
+      <div class="cal-header">
+        <button class="cal-nav">‹</button>
+        <span class="cal-month">Maio 2026</span>
+        <button class="cal-nav">›</button>
+      </div>
+      <div class="cal-grid">${calCells}</div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--brand);"></div>Selecionado</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="border:1px solid var(--border-medium);"></div>Disponível</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--bg-secondary);border:1px solid var(--border-light);"></div>Indisponível</div>
+      </div>
+    </div>
+    <div>
+      <div class="slots-date-label">
+        ${cSelDate ? `${cSelDate} de maio de 2026 — horários disponíveis` : 'Selecione uma data no calendário'}
+      </div>
+      ${cSelDate ? `
+        <div class="slots-group-label">Manhã</div>
+        <div class="slots-grid">${mkSlots(MANHA_SLOTS)}</div>
+        <div class="slots-group-label">Tarde</div>
+        <div class="slots-grid">${mkSlots(TARDE_SLOTS)}</div>
+      ` : '<div class="slots-empty">Os horários serão exibidos após selecionar uma data.</div>'}
+    </div>
+  </div>
+  <div class="footer">
+    <button class="btn-s" onclick="novoStep=1;renderNovoStep()">Voltar</button>
+    <button class="btn-p" ${canNext ? '' : 'disabled'} onclick="novoStep=3;renderNovoStep()">Revisar e confirmar</button>
+  </div>`;
+}
+function pickDate(d) { cSelDate = d; cSelSlot = null; renderNovoStep(); }
+function pickSlot(t) { cSelSlot = t; renderNovoStep(); }
+
+/* ════════════════════════════════
+   PASSO 3 — CONFIRMAÇÃO
+   Docs em grade 2 colunas para compactar
+════════════════════════════════ */
+function renderStepConfirm() {
+  if (!selSvc) return '';
+  return `
+  <div class="section-h">Confirmação</div>
+  <div class="section-s">Revise todos os dados antes de confirmar o agendamento</div>
+  <div class="warn-strip">⚠ O não comparecimento sem cancelamento prévio pode gerar restrição de novos agendamentos por 30 dias.</div>
+  <div class="confirm-card">
+    <div class="cr"><span class="cl">Serviço</span><span class="cv">${selSvc.name}</span></div>
+    <div class="cr"><span class="cl">Código</span><span class="cv">${selSvc.code}</span></div>
+    <div class="cr"><span class="cl">Contribuinte</span><span class="cv">João da Silva</span></div>
+    <div class="cr"><span class="cl">CPF</span><span class="cv">123.456.789-00</span></div>
+    <div class="cr"><span class="cl">Data</span><span class="cv">${cSelDate ? String(cSelDate).padStart(2,'0') + '/05/2026' : '—'}</span></div>
+    <div class="cr"><span class="cl">Horário</span><span class="cv">${cSelSlot || '—'}</span></div>
+    <div class="cr"><span class="cl">Local</span><span class="cv">SEFAZ Sede Central — R. Carlos Gomes, 690, Comércio</span></div>
+  </div>
+  <div class="confirm-card shaded">
+    <div class="doc-panel-title" style="margin-bottom:10px;">Documentação exigida</div>
+    <div class="rich-doc-content">${svcDocsHTML(selSvc)}</div>
+  </div>
+  <div class="footer">
+    <button class="btn-s" onclick="novoStep=2;renderNovoStep()">Voltar</button>
+    <button class="btn-p" onclick="finalizarAgend()">Confirmar agendamento</button>
+  </div>`;
+}
+
+/* ════════════════════════════════
+   PASSO 4 — CONCLUSÃO
+════════════════════════════════ */
+function finalizarAgend() {
+  const proto = 'AGD-2026-' + String(Math.floor(Math.random() * 89999) + 10000);
+  selDate = cSelDate; selSlot = cSelSlot;
+  agendamentos.unshift({
+    id: Date.now(), proto,
+    svc: selSvc.name, code: selSvc.code,
+    date: String(cSelDate).padStart(2,'0') + '/05/2026',
+    time: cSelSlot, status: 'agendado'
+  });
+  novoStep = 4;
+  renderNovoStep();
+}
+
+function renderStepDone() {
+  const proto = agendamentos[0] ? agendamentos[0].proto : 'AGD-2026-00000';
+  return `
+  <div class="success-wrap">
+    <div class="success-ico no-print">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#27500a" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h2>Agendamento confirmado!</h2>
+    <p class="no-print">Você receberá um e-mail de confirmação com todos os detalhes.</p>
+    <div class="proto-box">
+      <div class="proto-label">Número do protocolo</div>
+      <div class="proto-num">${proto}</div>
+    </div>
+    <div class="confirm-card" style="text-align:left;">
+      <div class="cr"><span class="cl">Serviço</span><span class="cv">${selSvc ? selSvc.name : '—'}</span></div>
+      <div class="cr"><span class="cl">Data</span><span class="cv">${selDate ? String(selDate).padStart(2,'0') + '/05/2026' : '—'}</span></div>
+      <div class="cr"><span class="cl">Horário</span><span class="cv">${selSlot || '—'}</span></div>
+      <div class="cr"><span class="cl">Local</span><span class="cv">SEFAZ Sede Central — R. Carlos Gomes, 690, Comércio</span></div>
+    </div>
+    <div class="confirm-card shaded" style="text-align:left;">
+      <div class="doc-panel-title" style="margin-bottom:10px;">Documentação a apresentar no atendimento</div>
+      <div class="rich-doc-content">${selSvc ? svcDocsHTML(selSvc) : ''}</div>
+    </div>
+    <div class="no-print" style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+      <button class="btn-p full" onclick="window.print()">Imprimir comprovante</button>
+      <button class="btn-s full" style="margin-top:0;" onclick="switchTab('consulta')">Ver meus agendamentos</button>
+    </div>
+  </div>`;
+}
+</script>
+</body>
+</html>
